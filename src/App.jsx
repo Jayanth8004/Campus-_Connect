@@ -1,43 +1,52 @@
-import { useState,useEffect } from "react";
+import {useState, useEffect} from "react";
 import { Routes, Route } from "react-router";
-
 import "./App.css";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import HomePage from "./pages/HomePage";
 import EventsPage from "./pages/EventsPage";
 import EventDetailsPage from "./pages/EventDetailsPage";
 import AboutPage from "./pages/AboutPage";
-
 function App() {
     const [events, setEvents] = useState([]);
-
     useEffect(()=>{
-        fetch("http://localhost:5000/api/events")
-        .then((response)=>response.json())
-        .then((data)=>{
-            setEvents(data);
-        });
-    }, []);
-
-    function handleAddEvent(newEvent) {
-        setEvents([...events, newEvent]);
-    }
-
-    function handleDeleteEvent(eventId) {
-        fetch(`http://localhost:5000/api/events/${eventId}`, {
-            method: "DELETE"
-        }).then((response)=>response.json())
-        .then((data)=>{
-            console.log(data);
             fetch("http://localhost:5000/api/events")
             .then((response)=>response.json())
             .then((data)=>{
                 setEvents(data);
             });
+        }, []);
+
+    function handleAddEvent(newEvent) {
+       fetch("http://localhost:5000/api/events",{
+        method:"POST",
+        headers:{"content-Type":"application/json"
+
+        },
+        body:JSON.stringify(newEvent)
+       }).then((response)=>response.json())
+       .then((data)=>{
+        console.log(data);
+        fetch("http://localhost:5000/api/events")
+        .then((response)=>response.json())
+        .then((data)=>{
+            setEvents(data);
         });
+       })
+    }
+
+    function handleDeleteEvent(eventId) {
+       fetch(`http://localhost:5000/api/events/${eventId}`,{
+        method: "DELETE"
+       }).then((response)=>response.json())
+       .then((data)=>{
+        console.log(data);
+        fetch("http://localhost:5000/api/events")
+        .then((response)=>response.json())
+        .then((data)=>{
+            setEvents(data);
+        })
+       })
     }
 
     return (

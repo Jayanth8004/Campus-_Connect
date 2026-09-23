@@ -79,6 +79,16 @@ app.delete("/api/events/:id", (req,res)=>{
     initialEvents.splice(eventIndex,1);
     res.json({ message: "Event deleted successfully" });
 })
+
+app.post("/api/events", (req, res)=>{
+  const newEvent = req.body;
+  initialEvents.push(newEvent);
+  res.json({
+    message: "Event added successfully",
+    event: newEvent
+  });
+});
+
 app.listen(5000,()=>{
     console.log("server is running on port 5000"); // without these the server will not start 
 })
