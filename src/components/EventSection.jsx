@@ -3,6 +3,7 @@ import EventCard from "./EventCard";
 
 function EventSection({
   events,
+  onEditEvent,
   onDeleteEvent,
 }) {
   const [searchText, setSearchText] =
@@ -97,14 +98,15 @@ function EventSection({
           {filteredEvents.map(function (event) {
             return (
               <EventCard
-                key={event.id}
-                id={event.id}
+                key={event._id}
+                id={event._id}
                 title={event.title}
                 category={event.category}
                 date={event.date}
                 time={event.time}
                 location={event.location}
                 description={event.description}
+                onEditEvent={onEditEvent}
                 onDeleteEvent={onDeleteEvent}
               />
             );

@@ -8,6 +8,7 @@ function EventCard({
   location,
   category,
   description,
+  onEditEvent,
   onDeleteEvent,
 }) {
   function handleDeleteClick() {
@@ -46,6 +47,24 @@ function EventCard({
       >
         View Details
       </Link>
+
+      <button
+        className="edit-button"
+        type="button"
+        onClick={function () {
+          onEditEvent({
+            _id: id,
+            title,
+            date,
+            time,
+            location,
+            category,
+            description,
+          });
+        }}
+      >
+        Edit
+      </button>
 
       <button
         className="delete-button"

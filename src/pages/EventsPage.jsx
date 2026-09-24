@@ -1,6 +1,6 @@
 import EventSection from "../components/EventSection";
 
-function EventsPage({ events, onDeleteEvent }) {
+function EventsPage({ events, onEditEvent, onDeleteEvent }) {
     
     return (
         <>
@@ -18,6 +18,7 @@ function EventsPage({ events, onDeleteEvent }) {
 
             <EventSection
                 events={events}
+                onEditEvent={onEditEvent}
                 onDeleteEvent={onDeleteEvent}
             />
         </>

@@ -435,6 +435,29 @@ button {
   transition: 0.2s ease;
 }
 
+.edit-button,
+.cancel-button {
+  margin-top: 9px;
+
+  padding: 10px 15px;
+
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+
+  background: white;
+  color: var(--primary-dark);
+
+  font-weight: 700;
+
+  transition: 0.2s ease;
+}
+
+.edit-button:hover,
+.cancel-button:hover {
+  background: var(--primary-light);
+  border-color: #93c5fd;
+}
+
 .delete-button:hover {
   background: var(--danger-light);
 
@@ -529,10 +552,6 @@ button {
 }
 
 .submit-button {
-  grid-column: 1 / -1;
-
-  width: fit-content;
-
   padding: 12px 20px;
 
   border: none;
@@ -544,6 +563,18 @@ button {
   font-weight: 700;
 
   transition: 0.2s ease;
+}
+
+.form-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 12px;
+  align-items: center;
+}
+
+.cancel-button {
+  margin-top: 0;
+  padding: 12px 20px;
 }
 
 .submit-button:hover {
@@ -720,8 +751,12 @@ button {
 
   .full-width,
   .form-error,
-  .submit-button {
+  .form-actions {
     grid-column: auto;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
   }
 
   .section-heading {

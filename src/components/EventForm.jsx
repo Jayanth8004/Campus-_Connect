@@ -1,13 +1,14 @@
 import { useState } from "react";
 
-function EventForm({ onAddEvent }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "",
-    date: "",
-    time: "",
-    location: "",
-    description: "",
+function EventForm({
+  id,
+  onAddEvent,
+  editingEvent,
+  onUpdateEvent,
+  onCancelEdit,
+}) {
+  const [formData, setFormData] = useState(function () {
+    return getFormData(editingEvent);
   });
 
   const [formError, setFormError] = useState("");
@@ -37,8 +38,8 @@ function EventForm({ onAddEvent }) {
       return;
     }
 
-    const newEvent = {
-      id: Date.now(),
+    const eventData = {
+      id: editingEvent ? editingEvent._id : undefined,
       title: formData.title,
       category: formData.category,
       date: formData.date,
@@ -47,7 +48,11 @@ function EventForm({ onAddEvent }) {
       description: formData.description,
     };
 
-    onAddEvent(newEvent);
+    if (editingEvent) {
+      onUpdateEvent(eventData);
+    } else {
+      onAddEvent(eventData);
+    }
 
     setFormData({
       title: "",
@@ -62,10 +67,10 @@ function EventForm({ onAddEvent }) {
   }
 
   return (
-    <section className="event-form-section">
+    <section id={id} className="event-form-section">
       <p className="section-label">Create an Activity</p>
 
-      <h2>Add a New Campus Event</h2>
+      <h2>{editingEvent ? "Update Campus Event" : "Add a New Campus Event"}</h2>
 
       <form className="event-form" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -150,12 +155,94 @@ function EventForm({ onAddEvent }) {
 
         {formError !== "" && <p className="form-error">{formError}</p>}
 
-        <button className="submit-button" type="submit">
-          Add Event
-        </button>
+        <div className="form-actions">
+          <button className="submit-button" type="submit">
+            {editingEvent ? "Update Event" : "Add Event"}
+          </button>
+
+          {editingEvent && (
+            <button
+              className="cancel-button"
+              type="button"
+              onClick={onCancelEdit}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
     </section>
   );
+}
+
+function formatDateForInput(date) {
+  if (!date) {
+    return "";
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return date;
+  }
+
+  const parsedDate = new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "";
+  }
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+  const day = String(parsedDate.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getFormData(event) {
+  if (!event) {
+    return {
+      title: "",
+      category: "",
+      date: "",
+      time: "",
+      location: "",
+      description: "",
+    };
+  }
+
+  return {
+    title: event.title,
+    category: event.category,
+    date: formatDateForInput(event.date),
+    time: formatTimeForInput(event.time),
+    location: event.location,
+    description: event.description,
+  };
+}
+
+function formatTimeForInput(time) {
+  if (!time) {
+    return "";
+  }
+
+  if (/^\d{2}:\d{2}$/.test(time)) {
+    return time;
+  }
+
+  const match = time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) {
+    return "";
+  }
+
+  let hours = Number(match[1]);
+  const minutes = match[2];
+  const meridiem = match[3].toUpperCase();
+
+  if (meridiem === "PM" && hours !== 12) {
+    hours += 12;
+  }
+  if (meridiem === "AM" && hours === 12) {
+    hours = 0;
+  }
+
+  return `${String(hours).padStart(2, "0")}:${minutes}`;
 }
 
 export default EventForm;
